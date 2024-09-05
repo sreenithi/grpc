@@ -312,6 +312,7 @@ def extension_modules():
     else:
         return extensions
 
+
 min_python_version = python_version.MIN_PYTHON_VERSION
 
 setuptools.setup(

@@ -46,13 +46,18 @@ class _NoOpCommand(setuptools.Command):
 
 
 supported_python_versions = python_version.SUPPORTED_PYTHON_VERSIONS
-CLASSIFIERS = [
-    "Development Status :: 5 - Production/Stable",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3"
-    ] + \
-    [f"Programming Language :: Python :: {x}" for x in supported_python_versions] + \
-    ["License :: OSI Approved :: Apache Software License"]
+CLASSIFIERS = (
+    [
+        "Development Status :: 5 - Production/Stable",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+    ]
+    + [
+        f"Programming Language :: Python :: {x}"
+        for x in supported_python_versions
+    ]
+    + ["License :: OSI Approved :: Apache Software License"]
+)
 
 
 PACKAGE_DIRECTORIES = {
