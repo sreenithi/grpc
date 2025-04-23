@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
 load("@rules_python//python:defs.bzl", "py_binary")
 load("//bazel:python_rules.bzl", "py_grpc_library", "py_proto_library")
 
@@ -34,24 +35,24 @@ py_grpc_library(
 py_binary(
     name = "greeter_server_py",
     srcs = ["greeter_server.py"],
-    main = "greeter_server.py",
     imports = ["."],
+    main = "greeter_server.py",
     deps = [
-        "//src/python/grpcio/grpc:grpcio",
         ":helloworld_py_pb2",
         ":helloworld_py_pb2_grpc",
+        "//src/python/grpcio/grpc:grpcio",
     ],
 )
 
 py_binary(
     name = "repro_greeter_client_py",
     srcs = ["repro_greeter_client.py"],
-    main = "repro_greeter_client.py",
     imports = ["."],
+    main = "repro_greeter_client.py",
     deps = [
-        "//src/python/grpcio/grpc:grpcio",
         ":helloworld_py_pb2",
         ":helloworld_py_pb2_grpc",
+        "//src/python/grpcio/grpc:grpcio",
     ],
 )
 
