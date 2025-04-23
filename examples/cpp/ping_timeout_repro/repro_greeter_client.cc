@@ -22,12 +22,10 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
-
-#include <thread>
-
 
 #ifdef BAZEL_BUILD
 #include "examples/protos/helloworld.grpc.pb.h"
@@ -90,8 +88,8 @@ int main(int argc, char** argv) {
   // InsecureChannelCredentials()).
   grpc::ChannelArguments args;
 
-  // Here we are configuring a keepalive time period of 2 seconds, with a 
-  // timeout of 15 seconds. Additionally, the internal channel argument 
+  // Here we are configuring a keepalive time period of 2 seconds, with a
+  // timeout of 15 seconds. Additionally, the internal channel argument
   // ping_timeout_ms is set for 10 seconds, to reproduce the ping timeout errors
   // quickly.
   args.SetInt(GRPC_ARG_KEEPALIVE_TIME_MS, 2 * 1000 /*2 sec*/);
@@ -107,6 +105,6 @@ int main(int argc, char** argv) {
     std::cout << "Greeter received: " << reply << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(10));
   }
-  
+
   return 0;
 }
