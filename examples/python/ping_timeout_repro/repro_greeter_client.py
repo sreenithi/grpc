@@ -27,20 +27,23 @@ import helloworld_pb2_grpc
 #     "helloworld.proto"
 # )
 
+
 def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with statement does not fit the needs
     # of the code.
-    target = "localhost:50051" #sys.argv[1] if len(sys.argv) else "localhost:50051"
+    target = (
+        "localhost:50051"  # sys.argv[1] if len(sys.argv) else "localhost:50051"
+    )
     sleep = 10
 
     # gRPC 1.68.x: causes FD Shutdown
     options = [
-        ("grpc.keepalive_time_ms", 2_000), # default: MAX_INT (disabled)
-        ("grpc.http2.ping_timeout_ms", sleep * 1_000), # default: 1 minute
+        ("grpc.keepalive_time_ms", 2_000),  # default: MAX_INT (disabled)
+        ("grpc.http2.ping_timeout_ms", sleep * 1_000),  # default: 1 minute
         # these options don't seem to matter with respect to the issue
-        ("grpc.keepalive_timeout_ms", 1_500), # default: 20_000
-        ("grpc.keepalive_permit_without_calls", 1), # default: 0 (disabled)
+        ("grpc.keepalive_timeout_ms", 1_500),  # default: 20_000
+        ("grpc.keepalive_permit_without_calls", 1),  # default: 0 (disabled)
     ]
 
     running = True
@@ -49,12 +52,16 @@ def run():
         while running:
             try:
                 logging.info("Will try to greet world ...")
-                response = stub.SayHello(helloworld_pb2.HelloRequest(name="you"))
-                logging.info(f"Greeter client received: {response.message}; sleeping {sleep} seconds")
+                response = stub.SayHello(
+                    helloworld_pb2.HelloRequest(name="you")
+                )
+                logging.info(
+                    f"Greeter client received: {response.message}; sleeping {sleep} seconds"
+                )
             except Exception as err:
                 logging.error(f"gRPC error {err}")
                 running = False
-            time.sleep(sleep+5)
+            time.sleep(sleep + 5)
 
 
 if __name__ == "__main__":
