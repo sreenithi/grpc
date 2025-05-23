@@ -108,7 +108,11 @@ void grpc_set_default_iomgr_platform() {
 }
 
 bool grpc_iomgr_run_in_background() {
+#ifndef GRPC_DO_NOT_INSTANTIATE_POSIX_POLLER
   return grpc_core::IsEventEngineCallbackCqEnabled();
+#else
+  return false
+#endif
 }
 
 #endif  // GRPC_WINSOCK_SOCKET

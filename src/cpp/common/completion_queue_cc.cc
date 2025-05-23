@@ -190,9 +190,11 @@ bool CompletionQueue::CompletionQueueTLSCache::Flush(void** tag, bool* ok) {
 }
 
 CompletionQueue* CompletionQueue::CallbackAlternativeCQ() {
+#ifndef GRPC_DO_NOT_INSTANTIATE_POSIX_POLLER
   if (grpc_core::IsEventEngineCallbackCqEnabled()) {
     grpc_core::Crash("CallbackAlternativeCQ should not be instantiated");
   }
+#endif
   gpr_once_init(&g_once_init_callback_alternative,
                 [] { g_callback_alternative_mu = new grpc_core::Mutex(); });
   return g_callback_alternative_cq.Ref();
