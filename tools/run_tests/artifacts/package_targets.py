@@ -177,7 +177,7 @@ class PythonPackage:
             "PYTHON": "/opt/python/cp39-cp39/bin/python",
             "ARTIFACT_PREFIX": "python_",
             "EXCLUDE_PATTERN": "python_*_aarch64_*",
-            "ONLY_COPY_COMMON_FILES": ""
+            "ONLY_COPY_COMMON_FILES": "",
         }
         if "musllinux_1_2" in self.platform and "aarch64" in self.arch:
             dockerfile_dir = (
