@@ -168,7 +168,7 @@ class PythonPackage:
         dockerfile_dir = (
             "tools/dockerfile/grpc_artifact_python_manylinux2014_x64"
         )
-        shell_command = "tools/run_tests/artifacts/package_python.sh",
+        shell_command = ("tools/run_tests/artifacts/package_python.sh",)
         environ = {
             "PYTHON": "/opt/python/cp39-cp39/bin/python",
             "ARTIFACT_PREFIX": "python_",
@@ -195,7 +195,6 @@ class PythonPackage:
             # noarch files in all platform-arch combinations are going to be
             # the same, so specify any one prefix
             environ["ARTIFACT_PREFIX"] = "python_manylinux2014_x64_"
-
 
         return create_docker_jobspec(
             self.name,
@@ -234,7 +233,6 @@ def targets():
         PythonPackage(),
         PythonPackage("musllinux_1_2", "aarch64"),
         PythonPackage("manylinux2014", "aarch64"),
-
         # all the artifact builder configurations generate an equivalent
         # grpcio-VERSION.tar.gz source distribution package and
         # grpcio-VERSION-py3-none-any.whl file. Only one of them is needed in
