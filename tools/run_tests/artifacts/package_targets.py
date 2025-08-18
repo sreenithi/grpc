@@ -205,7 +205,6 @@ class PythonPackage:
             # the same, so specify any one prefix
             environ["ARTIFACT_PREFIX"] = "python_manylinux2014_x64_"
 
-
         return create_docker_jobspec(
             self.name,
             dockerfile_dir,
