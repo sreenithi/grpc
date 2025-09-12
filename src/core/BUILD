@@ -8291,12 +8291,14 @@ grpc_cc_library(
         "latent_see",
         "loop",
         "map",
+        "memory_quota",
         "message",
         "message_assembler",
         "metadata",
         "metadata_batch",
         "mpsc",
         "ping_promise",
+        "resource_quota",
         "stream_data_queue",
         "sync",
         "transport_common",
@@ -8416,6 +8418,7 @@ grpc_cc_library(
         "arena",
         "call_spine",
         "channel_args",
+        "chttp2_flow_control",
         "grpc_promise_endpoint",
         "http2_settings",
         "loop",
@@ -9307,6 +9310,7 @@ grpc_cc_library(
     ],
     deps = [
         "bitset",
+        "channelz_property_list",
         "//:gpr_platform",
     ],
 )
@@ -9365,12 +9369,27 @@ grpc_cc_library(
     external_deps = ["absl/cleanup"],
     deps = [
         "1999",
+        "chaotic_good_legacy_ztrace_collector",
         "event_engine_context",
         "event_engine_tcp_socket_utils",
         "grpc_promise_endpoint",
         "loop",
+        "map",
         "sync",
         "try_seq",
+    ],
+)
+
+grpc_cc_library(
+    name = "chaotic_good_legacy_ztrace_collector",
+    hdrs = [
+        "ext/transport/chaotic_good_legacy/legacy_ztrace_collector.h",
+    ],
+    external_deps = ["absl/log"],
+    deps = [
+        "channelz_property_list",
+        "chaotic_good_legacy_frame_header",
+        "ztrace_collector",
     ],
 )
 
@@ -9401,7 +9420,9 @@ grpc_cc_library(
     ],
     deps = [
         "1999",
+        "channelz_property_list",
         "chaotic_good_legacy_pending_connection",
+        "chaotic_good_legacy_ztrace_collector",
         "default_tcp_tracer",
         "event_engine_context",
         "event_engine_extensions",
@@ -9425,10 +9446,12 @@ grpc_cc_library(
     external_deps = ["absl/strings"],
     deps = [
         "call_spine",
+        "channelz_property_list",
         "chaotic_good_legacy_control_endpoint",
         "chaotic_good_legacy_data_endpoints",
         "chaotic_good_legacy_frame",
         "chaotic_good_legacy_frame_header",
+        "chaotic_good_legacy_ztrace_collector",
         "event_engine_context",
         "event_engine_tcp_socket_utils",
         "grpc_promise_endpoint",
@@ -9464,6 +9487,7 @@ grpc_cc_library(
     deps = [
         "activity",
         "arena",
+        "channelz_property_list",
         "chaotic_good_legacy_config",
         "chaotic_good_legacy_frame",
         "chaotic_good_legacy_frame_header",
@@ -10290,12 +10314,15 @@ grpc_cc_library(
     ],
     deps = [
         "avl",
+        "channelz_property_list",
         "dual_ref_counted",
         "histogram",
         "match",
         "per_cpu",
         "ref_counted",
+        "single_set_ptr",
         "sync",
+        "//:channelz",
         "//:gpr",
         "//:ref_counted_ptr",
     ],
@@ -10756,6 +10783,21 @@ grpc_cc_library(
     deps = [
         "zviz_environment",
         "zviz_html",
+        "zviz_layout",
+    ],
+)
+
+grpc_cc_library(
+    name = "zviz_layout_text",
+    srcs = [
+        "channelz/zviz/layout_text.cc",
+    ],
+    hdrs = ["channelz/zviz/layout_text.h"],
+    external_deps = [
+        "absl/strings",
+        "absl/strings:str_format",
+    ],
+    deps = [
         "zviz_layout",
     ],
 )
