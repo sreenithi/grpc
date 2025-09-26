@@ -143,15 +143,15 @@ class TestTypeMetadata(unittest.TestCase):
         metadata.append(("key", "second value"))
         metadata.append(("key2", "value2"))
 
-        self.assertEqual(metadata.get("key"), ["value", "second value"])
         self.assertEqual(metadata.get("key2"), "value2")
+        self.assertEqual(metadata.get_all("key"), ["value", "second value"])
 
         with self.assertRaises(ValueError):
             metadata.append(("invalid_key", "invalid_value1", "invalid_value2"))
 
         with self.assertRaises(ValueError):
             metadata.append(["invalid_key_in_list", "invalid_value_in_list"])
-            
+
     def test_container(self):
         metadata = Metadata(*self._MULTI_ENTRY_DATA)
         self.assertIn("key1", metadata)
