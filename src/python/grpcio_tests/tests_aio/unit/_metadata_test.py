@@ -151,7 +151,7 @@ class TestTypeMetadata(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             metadata.append(["invalid_key_in_list", "invalid_value_in_list"])
-            
+
     def test_container(self):
         metadata = Metadata(*self._MULTI_ENTRY_DATA)
         self.assertIn("key1", metadata)
