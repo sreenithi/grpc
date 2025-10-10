@@ -22,10 +22,10 @@ import setuptools
 # imports to succeed
 sys.path.insert(0, os.path.abspath("."))
 
+import grpc_version
+
 # Break import-style to ensure we can actually find our local modules.
 import python_version
-
-import grpc_version
 
 INSTALL_REQUIRES = (
     "grpcio-channelz>={version}".format(version=grpc_version.VERSION),
