@@ -292,7 +292,9 @@ class BuildExt(build_ext.build_ext):
 
         grpc_temp_dir = os.getenv("GRPC_BUILD_EXT_TEMP", None)
         if grpc_temp_dir is not None:
-            print(f"Overriding build_temp with environment variable: {grpc_temp_dir}")
+            print(
+                f"Overriding build_temp with environment variable: {grpc_temp_dir}"
+            )
             self.build_temp = grpc_temp_dir
 
         # This is to let UnixCompiler get either C or C++ compiler options depending on the source.
