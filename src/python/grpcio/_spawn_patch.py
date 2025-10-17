@@ -30,6 +30,7 @@ MAX_COMMAND_LENGTH = 8191
 
 _classic_spawn = ccompiler.CCompiler.spawn
 
+
 def get_setuptools_temp_dir():
     # Get the Platform/Architecture Part ('win32' / 'win-amd64')
     platform_tag = distutils.util.get_platform()
@@ -67,7 +68,7 @@ def _commandfile_spawn(self, command, **kwargs):
         # fail as is so we try blindly
 
         build_temp = os.path.join("pyb", get_setuptools_temp_dir())
-        #os.environ.get("BUILD_EXT_TEMP")
+        # os.environ.get("BUILD_EXT_TEMP")
 
         print("Using temp directory:", build_temp)
         release_build_dir = os.path.join(build_temp, "Release")
