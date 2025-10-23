@@ -13,9 +13,10 @@
 # limitations under the License.
 """Provides nox command classes for the GRPC Python setup process."""
 
-import nox
 import os
 import shutil
+
+import nox
 
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
 GRPC_ROOT_ABS_PATH = os.path.join(ROOT_DIR, "../../..")
