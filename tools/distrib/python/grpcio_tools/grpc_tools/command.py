@@ -44,7 +44,7 @@ def build_package_protos(package_root, strict_mode=False):
 
     # Temporarily force set to true to catch failures
     # TODO(ssreenithi): remove before submitting
-    strict_mode=True
+    strict_mode = True
 
     proto_files = []
     inclusion_root_abs = os.path.abspath(package_root)
