@@ -74,8 +74,8 @@ autodoc_default_options = {
 # autodoc_mock_imports = ["envoy"]
 autodoc_mock_imports = [
     "envoy",
-    # "grpc._cython", # TODO: Verify if this is only needed to run locally or everywhere
-    # "grpc_observability._cyobservability",
+    "grpc._cython",
+    # "grpc_observability._cyobservability", # TODO: Verify if this is only needed to run locally or everywhere
 ]
 
 
