@@ -253,9 +253,3 @@ pip_install_dir "$ROOT/src/python/grpcio_tests"
 
 echo "Workdir: $(pwd)"
 echo "ROOT: $ROOT"
-
-echo "protoc version:"
-protoc --version
-
-echo "grpc_tools.protoc version:"
-$VENV_PYTHON -m grpc_tools.protoc --version
