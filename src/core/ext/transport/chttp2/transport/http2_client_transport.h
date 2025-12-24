@@ -88,23 +88,6 @@
 namespace grpc_core {
 namespace http2 {
 
-// All Promise Based HTTP2 Transport TODOs have the tag
-// [PH2][Pn] where n = 0 to 5.
-// This helps to maintain the uniformity for quick lookup and fixing.
-//
-// [PH2][P0] MUST be fixed before the current PR is submitted.
-// [PH2][P1] MUST be fixed before the current sub-project is considered
-//           complete.
-// [PH2][P2] MUST be fixed before the current Milestone is considered
-//           complete.
-// [PH2][P3] MUST be fixed before Milestone 3 is considered complete.
-// [PH2][P4] Can be fixed after roll out begins. Evaluate these during
-//           Milestone 4. Either do the TODOs or delete them.
-// [PH2][P5] Can be fixed after roll out begins. Evaluate these during
-//           Milestone 4. Either do the TODOs or delete them.
-// [PH2][EXT] This is a TODO related to a project unrelated to PH2 but happening
-//            in parallel.
-
 // Http2 Client Transport Spawns Overview
 
 // | Promise Spawn       | Max Duration | Promise Resolution    | Max Spawns |
@@ -380,14 +363,7 @@ class Http2ClientTransport final : public ClientTransport,
   Latch<void> transport_closed_latch_;
 
   template <typename Promise>
-  auto UntilTransportClosed(Promise promise) {
-    return Race(Map(transport_closed_latch_.Wait(),
-                    [](Empty) {
-                      GRPC_HTTP2_CLIENT_DLOG << "Transport closed";
-                      return absl::CancelledError("Transport closed");
-                    }),
-                std::move(promise));
-  }
+  auto UntilTransportClosed(Promise promise);
 
   // Spawns an infallible promise on the given party.
   template <typename Factory>
@@ -423,36 +399,13 @@ class Http2ClientTransport final : public ClientTransport,
 
   RefCountedPtr<Stream> LookupStream(uint32_t stream_id);
 
-  auto EndpointReadSlice(const size_t num_bytes) {
-    return Map(endpoint_.ReadSlice(num_bytes),
-               [self = RefAsSubclass<Http2ClientTransport>(),
-                num_bytes](absl::StatusOr<Slice> status) {
-                 if (status.ok()) {
-                   self->keepalive_manager_->GotData();
-                   self->ztrace_collector_->Append(
-                       PromiseEndpointReadTrace{num_bytes});
-                 }
-                 return status;
-               });
-  }
+  auto EndpointReadSlice(const size_t num_bytes);
+  auto EndpointRead(const size_t num_bytes);
 
   // HTTP2 Settings
   auto WaitForSettingsTimeoutOnDone();
   void MaybeSpawnWaitForSettingsTimeout();
   void EnforceLatestIncomingSettings();
-
-  auto EndpointRead(const size_t num_bytes) {
-    return Map(endpoint_.Read(num_bytes),
-               [self = RefAsSubclass<Http2ClientTransport>(),
-                num_bytes](absl::StatusOr<SliceBuffer> status) {
-                 if (status.ok()) {
-                   self->keepalive_manager_->GotData();
-                   self->ztrace_collector_->Append(
-                       PromiseEndpointReadTrace{num_bytes});
-                 }
-                 return status;
-               });
-  }
 
   // This function MUST run on the transport party.
   void CloseTransport();
@@ -565,61 +518,15 @@ class Http2ClientTransport final : public ClientTransport,
                : Duration::Seconds(1);
   }
 
-  auto AckPing(uint64_t opaque_data) {
-    bool valid_ping_ack_received = true;
-
-    if (!ping_manager_->AckPing(opaque_data)) {
-      GRPC_HTTP2_CLIENT_DLOG << "Unknown ping response received for ping id="
-                             << opaque_data;
-      valid_ping_ack_received = false;
-    }
-
-    return If(
-        // It is possible that the PingRatePolicy may decide to not send a ping
-        // request (in cases like the number of inflight pings is too high).
-        // When this happens, it becomes important to ensure that if a ping ack
-        // is received and there is an "important" outstanding ping request, we
-        // should retry to send it out now.
-        valid_ping_ack_received && ping_manager_->ImportantPingRequested(),
-        [self = RefAsSubclass<Http2ClientTransport>()] {
-          return Map(self->TriggerWriteCycle(), [](const absl::Status status) {
-            return ToHttpOkOrConnError(status);
-          });
-        },
-        [] { return Immediate(Http2Status::Ok()); });
-  }
+  auto AckPing(uint64_t opaque_data);
 
   class PingSystemInterfaceImpl : public PingInterface {
    public:
-    static std::unique_ptr<PingInterface> Make(
-        Http2ClientTransport* transport) {
-      return std::make_unique<PingSystemInterfaceImpl>(
-          PingSystemInterfaceImpl(transport));
-    }
-
-    Promise<absl::Status> TriggerWrite() override {
-      return transport_->TriggerWriteCycle();
-    }
-
-    Promise<absl::Status> PingTimeout() override {
-      GRPC_HTTP2_CLIENT_DLOG << "Ping timeout at time: " << Timestamp::Now();
-
-      // TODO(akshitpatel) : [PH2][P2] : The error code here has been chosen
-      // based on CHTTP2's usage of GRPC_STATUS_UNAVAILABLE (which corresponds
-      // to kRefusedStream). However looking at RFC9113, definition of
-      // kRefusedStream doesn't seem to fit this case. We should revisit this
-      // and update the error code.
-      return Immediate(transport_->HandleError(
-          std::nullopt,
-          Http2Status::Http2ConnectionError(Http2ErrorCode::kRefusedStream,
-                                            GRPC_CHTTP2_PING_TIMEOUT_STR)));
-    }
+    static std::unique_ptr<PingInterface> Make(Http2ClientTransport* transport);
+    Promise<absl::Status> TriggerWrite() override;
+    Promise<absl::Status> PingTimeout() override;
 
    private:
-    // TODO(akshitpatel) : [PH2][P2] : Eventually there should be a separate ref
-    // counted struct/class passed to all the transport promises/members. This
-    // will help removing back references from the transport members to
-    // transport and greatly simpilfy the cleanup path.
     Http2ClientTransport* transport_;
     explicit PingSystemInterfaceImpl(Http2ClientTransport* transport)
         : transport_(transport) {}
@@ -628,57 +535,22 @@ class Http2ClientTransport final : public ClientTransport,
   class KeepAliveInterfaceImpl : public KeepAliveInterface {
    public:
     static std::unique_ptr<KeepAliveInterface> Make(
-        Http2ClientTransport* transport) {
-      return std::make_unique<KeepAliveInterfaceImpl>(
-          KeepAliveInterfaceImpl(transport));
-    }
+        Http2ClientTransport* transport);
 
    private:
     explicit KeepAliveInterfaceImpl(Http2ClientTransport* transport)
         : transport_(transport) {}
-    Promise<absl::Status> SendPingAndWaitForAck() override {
-      return TrySeq(transport_->TriggerWriteCycle(), [transport = transport_] {
-        return transport->WaitForPingAck();
-      });
-    }
-    Promise<absl::Status> OnKeepAliveTimeout() override {
-      GRPC_HTTP2_CLIENT_DLOG << "Keepalive timeout triggered";
+    Promise<absl::Status> SendPingAndWaitForAck() override;
+    Promise<absl::Status> OnKeepAliveTimeout() override;
+    bool NeedToSendKeepAlivePing() override;
 
-      // TODO(akshitpatel) : [PH2][P2] : The error code here has been chosen
-      // based on CHTTP2's usage of GRPC_STATUS_UNAVAILABLE (which corresponds
-      // to kRefusedStream). However looking at RFC9113, definition of
-      // kRefusedStream doesn't seem to fit this case. We should revisit this
-      // and update the error code.
-      return Immediate(transport_->HandleError(
-          std::nullopt, Http2Status::Http2ConnectionError(
-                            Http2ErrorCode::kRefusedStream,
-                            GRPC_CHTTP2_KEEPALIVE_TIMEOUT_STR)));
-    }
-
-    bool NeedToSendKeepAlivePing() override {
-      bool need_to_send_ping = false;
-      {
-        MutexLock lock(&transport_->transport_mutex_);
-        need_to_send_ping = (transport_->keepalive_permit_without_calls_ ||
-                             transport_->GetActiveStreamCountLocked() > 0);
-      }
-      return need_to_send_ping;
-    }
-
-    // TODO(akshitpatel) : [PH2][P2] : Eventually there should be a separate ref
-    // counted struct/class passed to all the transport promises/members. This
-    // will help removing back references from the transport members to
-    // transport and greatly simpilfy the cleanup path.
     Http2ClientTransport* transport_;
   };
 
   class GoawayInterfaceImpl : public GoawayInterface {
    public:
     static std::unique_ptr<GoawayInterface> Make(
-        Http2ClientTransport* transport) {
-      return std::make_unique<GoawayInterfaceImpl>(
-          GoawayInterfaceImpl(transport));
-    }
+        Http2ClientTransport* transport);
 
     Promise<absl::Status> SendPingAndWaitForAck() override {
       return transport_->ping_manager_->RequestPing(/*on_initiate=*/[] {},
@@ -686,14 +558,7 @@ class Http2ClientTransport final : public ClientTransport,
     }
 
     void TriggerWriteCycle() override { transport_->TriggerWriteCycle(); }
-
-    uint32_t GetLastAcceptedStreamId() override {
-      GRPC_DCHECK(false)
-          << "GetLastAcceptedStreamId is not implemented for client transport.";
-      LOG(ERROR) << "GetLastAcceptedStreamId is not implemented for client "
-                    "transport.";
-      return 0;
-    }
+    uint32_t GetLastAcceptedStreamId() override;
 
    private:
     explicit GoawayInterfaceImpl(Http2ClientTransport* transport)
@@ -733,9 +598,7 @@ class Http2ClientTransport final : public ClientTransport,
 
   /// Based on channel args, preferred_rx_crypto_frame_sizes are advertised to
   /// the peer
-  // TODO(tjagtap) : [PH2][P1] : Plumb this with the necessary frame size flow
-  // control workflow corresponding to grpc_chttp2_act_on_flowctl_action
-  GRPC_UNUSED bool enable_preferred_rx_crypto_frame_advertisement_;
+  bool enable_preferred_rx_crypto_frame_advertisement_;
   MemoryOwner memory_owner_;
   chttp2::TransportFlowControl flow_control_;
   std::shared_ptr<PromiseHttp2ZTraceCollector> ztrace_collector_;
