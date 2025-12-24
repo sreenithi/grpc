@@ -168,6 +168,9 @@ pip_install_dir_and_deps() {
   cd "${workdir}"
 }
 
+echo "Workdir: $(pwd)"
+echo "ROOT: $ROOT"
+
 pip_install -U gevent
 
 pip_install --upgrade 'cython==3.1.1'
@@ -179,9 +182,11 @@ then
 fi
 
 pip_install_dir "$ROOT"
+echo "Installed grpcio from $ROOT"
 
 $VENV_PYTHON "$ROOT/tools/distrib/python/make_grpcio_tools.py"
 pip_install_dir_and_deps "$ROOT/tools/distrib/python/grpcio_tools"
+echo "Installed grpcio_tools"
 
 # Build/install Observability
 # Observability does not support Windows and MacOS.
@@ -191,27 +196,36 @@ else
   $VENV_PYTHON "$ROOT/src/python/grpcio_observability/make_grpcio_observability.py"
   pip_install_dir_and_deps "$ROOT/src/python/grpcio_observability"
   pip_install_dir_and_deps "$ROOT/src/python/grpcio_csm_observability"
+  echo "Installed grpcio_observability and grpcio_csm_observability, going for grpcio_channelz"
 fi
 
 # Build/install Channelz
 $VENV_PYTHON "$ROOT/src/python/grpcio_channelz/setup.py" preprocess
 $VENV_PYTHON "$ROOT/src/python/grpcio_channelz/setup.py" build_package_protos
 pip_install_dir "$ROOT/src/python/grpcio_channelz"
+echo "Installed grpcio_channelz, going for grpcio_health_checking"
+ls "$ROOT/src/python/grpcio_channelz/grpc_channelz/v1"
 
 # Build/install health checking
 $VENV_PYTHON "$ROOT/src/python/grpcio_health_checking/setup.py" preprocess
 $VENV_PYTHON "$ROOT/src/python/grpcio_health_checking/setup.py" build_package_protos
 pip_install_dir "$ROOT/src/python/grpcio_health_checking"
+echo "Installed grpcio_health_checking, going for grpcio_reflection"
+ls "$ROOT/src/python/grpcio_health_checking/grpc_health/v1"
+
 
 # Build/install reflection
 $VENV_PYTHON "$ROOT/src/python/grpcio_reflection/setup.py" preprocess
 $VENV_PYTHON "$ROOT/src/python/grpcio_reflection/setup.py" build_package_protos
 pip_install_dir "$ROOT/src/python/grpcio_reflection"
+echo "Installed grpcio_reflection, going for grpcio_status"
+ls "$ROOT/src/python/grpcio_reflection/grpc_reflection/v1alpha"
 
 # Build/install status proto mapping
 $VENV_PYTHON "$ROOT/src/python/grpcio_status/setup.py" preprocess
 $VENV_PYTHON "$ROOT/src/python/grpcio_status/setup.py" build_package_protos
 pip_install_dir "$ROOT/src/python/grpcio_status"
+echo "Installed grpcio_status"
 
 
 # Build/install status proto mapping
@@ -236,3 +250,6 @@ pip_install "coverage>=7.9.0" oauth2client==4.1.0 \
 $VENV_PYTHON "$ROOT/src/python/grpcio_tests/setup.py" preprocess
 $VENV_PYTHON "$ROOT/src/python/grpcio_tests/setup.py" build_package_protos
 pip_install_dir "$ROOT/src/python/grpcio_tests"
+
+echo "Workdir: $(pwd)"
+echo "ROOT: $ROOT"
