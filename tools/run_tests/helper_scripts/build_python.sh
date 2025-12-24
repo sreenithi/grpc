@@ -174,7 +174,7 @@ echo "ROOT: $ROOT"
 pip_install -U gevent
 
 pip_install --upgrade 'cython==3.1.1'
-pip_install --upgrade six 'protobuf==6.32.1' #>=6.31.1,<7.0.0'
+pip_install --upgrade six 'protobuf==6.31.1' #>=6.31.1,<7.0.0'
 
 if [ "$("$VENV_PYTHON" -c "import sys; print(sys.version_info[0])")" == "2" ]
 then
