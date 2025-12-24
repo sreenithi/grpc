@@ -186,18 +186,18 @@ echo "Installed grpcio from $ROOT"
 
 $VENV_PYTHON "$ROOT/tools/distrib/python/make_grpcio_tools.py"
 pip_install_dir_and_deps "$ROOT/tools/distrib/python/grpcio_tools"
-echo "Installed grpcio_tools, going for grpcio_channelz"
+echo "Installed grpcio_tools"
 
 # Build/install Observability
 # Observability does not support Windows and MacOS.
-# if [ "$(is_mingw)" ] || [ "$(is_darwin)" ]; then
-#   echo "Skip building grpcio_observability for Windows or MacOS"
-# else
-#   $VENV_PYTHON "$ROOT/src/python/grpcio_observability/make_grpcio_observability.py"
-#   pip_install_dir_and_deps "$ROOT/src/python/grpcio_observability"
-#   pip_install_dir_and_deps "$ROOT/src/python/grpcio_csm_observability"
-#   echo "Installed grpcio_observability and grpcio_csm_observability, going for grpcio_channelz"
-# fi
+if [ "$(is_mingw)" ] || [ "$(is_darwin)" ]; then
+  echo "Skip building grpcio_observability for Windows or MacOS"
+else
+  $VENV_PYTHON "$ROOT/src/python/grpcio_observability/make_grpcio_observability.py"
+  pip_install_dir_and_deps "$ROOT/src/python/grpcio_observability"
+  pip_install_dir_and_deps "$ROOT/src/python/grpcio_csm_observability"
+  echo "Installed grpcio_observability and grpcio_csm_observability, going for grpcio_channelz"
+fi
 
 # Build/install Channelz
 $VENV_PYTHON "$ROOT/src/python/grpcio_channelz/setup.py" preprocess
@@ -253,6 +253,9 @@ pip_install_dir "$ROOT/src/python/grpcio_tests"
 
 echo "Workdir: $(pwd)"
 echo "ROOT: $ROOT"
+
+echo "protoc version:"
+protoc --version
 
 echo "grpc_tools.protoc version:"
 $VENV_PYTHON -m grpc_tools.protoc --version
