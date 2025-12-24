@@ -1,8 +1,31 @@
-dl.field-list > dt {
-    word-break: keep-all !important;
+/* Ensure long function/method signatures wrap on mobile */
+dt.sig {
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: break-all !important;
+  /* Force break for very long identifiers */
 }
-.sphinxsidebar {
-    overflow-y: scroll;
-    top: 0;
-    bottom: 0;
+
+/* Optional: Add a bit of indentation for wrapped lines to keep them readable */
+dt.sig-object {
+  padding-left: 1em;
+  text-indent: -1em;
+}
+
+/* Sidebar Widths */
+.bd-sidebar-primary {
+  width: 17%;
+}
+
+.bd-sidebar-secondary {
+  width: 30%;
+}
+
+/* Mobile Sidebar Widths */
+@media (max-width: 960px) {
+
+  .bd-sidebar-primary,
+  .bd-sidebar-secondary {
+    width: 75% !important;
+  }
 }
