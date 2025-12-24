@@ -27,7 +27,6 @@ proto-plus==1.27.0
 protobuf==6.33.2
 pyasn1==0.6.1
 pyasn1-modules==0.4.1
-pydata_sphinx_theme==0.16.1
 requests==2.32.3
 rsa==4.9
 setuptools==77.0.1

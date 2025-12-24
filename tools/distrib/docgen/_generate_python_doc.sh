@@ -28,4 +28,5 @@ tools/run_tests/run_tests.py -c opt -l python --compiler python3.9 --newline_on_
 # shellcheck disable=SC1091
 source py39/bin/activate
 pip install --upgrade Sphinx
+pip install pydata_sphinx_theme==0.16.1
 python setup.py doc
