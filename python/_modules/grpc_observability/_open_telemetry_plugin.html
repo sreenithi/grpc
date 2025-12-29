@@ -1,0 +1,515 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>grpc_observability._open_telemetry_plugin &#8212; gRPC Python Docs v1.79.0</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=91a1c956" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=63189dc3"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-60127042-1"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'UA-60127042-1');
+            </script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'UA-60127042-1');
+            </script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/grpc_observability/_open_telemetry_plugin';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.79.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">gRPC Python Docs v1.79.0</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">grpc_observability._open_telemetry_plugin</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for grpc_observability._open_telemetry_plugin</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2023 gRPC authors.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="c1"># pytype: disable=pyi-error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">grpc_observability</span><span class="w"> </span><span class="kn">import</span> <span class="n">_open_telemetry_observability</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">grpc_observability._observability</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptionalLabelType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeterProvider</span>
+
+<span class="n">GRPC_METHOD_LABEL</span> <span class="o">=</span> <span class="s2">&quot;grpc.method&quot;</span>
+<span class="n">GRPC_TARGET_LABEL</span> <span class="o">=</span> <span class="s2">&quot;grpc.target&quot;</span>
+<span class="n">GRPC_CLIENT_METRIC_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;grpc.client&quot;</span>
+<span class="n">GRPC_OTHER_LABEL_VALUE</span> <span class="o">=</span> <span class="s2">&quot;other&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OpenTelemetryLabelInjector</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An interface that allows you to add additional labels on the calls traced.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_labels_for_exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get labels used for metadata exchange.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          A dict of labels, with a string as key representing label name, string or bytes</span>
+<span class="sd">        as value representing label value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_additional_labels</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">include_exchange_labels</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get additional labels added by this injector.</span>
+
+<span class="sd">        The return value from this method will be added directly to metric data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          include_exchange_labels: Whether to add additional metadata exchange related labels.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          A dict of labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="c1"># pylint: disable=no-self-use</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deserialize_labels</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deserialize the labels if required.</span>
+
+<span class="sd">        If this injector added labels for metadata exchange, this method will be called to</span>
+<span class="sd">        deserialize the exchanged labels.</span>
+
+<span class="sd">        For example, if this injector added xds_peer_metadata_label for exchange:</span>
+
+<span class="sd">            labels: {&quot;labelA&quot;: b&quot;valueA&quot;, &quot;xds_peer_metadata_label&quot;: b&quot;exchanged_bytes&quot;}</span>
+
+<span class="sd">        This method should deserialize xds_peer_metadata_label and return labels as:</span>
+
+<span class="sd">            labels: {&quot;labelA&quot;: b&quot;valueA&quot;, &quot;xds_label_A&quot;: &quot;xds_label_A&quot;,</span>
+<span class="sd">                     &quot;xds_label_B&quot;: &quot;xds_label_B&quot;}</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          A dict of deserialized labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">labels</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OpenTelemetryPluginOption</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An interface that allows you to add additional function to OpenTelemetryPlugin.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<span class="c1"># pylint: disable=no-self-use</span>
+<div class="viewcode-block" id="OpenTelemetryPlugin">
+<a class="viewcode-back" href="../../grpc_observability.html#grpc_observability.OpenTelemetryPlugin">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OpenTelemetryPlugin</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Describes a Plugin for OpenTelemetry observability.&quot;&quot;&quot;</span>
+
+    <span class="n">plugin_options</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">OpenTelemetryPluginOption</span><span class="p">]</span>
+    <span class="n">meter_provider</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MeterProvider</span><span class="p">]</span>
+    <span class="n">target_attribute_filter</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
+    <span class="n">generic_method_attribute_filter</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
+    <span class="n">_plugins</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_open_telemetry_observability</span><span class="o">.</span><span class="n">_OpenTelemetryPlugin</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">plugin_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">OpenTelemetryPluginOption</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">meter_provider</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MeterProvider</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">target_attribute_filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">generic_method_attribute_filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">          plugin_options: An Iterable of OpenTelemetryPluginOption which will be</span>
+<span class="sd">        enabled for this OpenTelemetryPlugin.</span>
+<span class="sd">          meter_provider: A MeterProvider which will be used to collect telemetry data,</span>
+<span class="sd">        or None which means no metrics will be collected.</span>
+<span class="sd">          target_attribute_filter: [DEPRECATED] This attribute is deprecated and should</span>
+<span class="sd">        not be used.</span>
+<span class="sd">        Once provided, this will be called per channel to decide whether to record the</span>
+<span class="sd">        target attribute on client or to replace it with &quot;other&quot;.</span>
+<span class="sd">        This helps reduce the cardinality on metrics in cases where many channels</span>
+<span class="sd">        are created with different targets in the same binary (which might happen</span>
+<span class="sd">        for example, if the channel target string uses IP addresses directly).</span>
+<span class="sd">        Return True means the original target string will be used, False means target string</span>
+<span class="sd">        will be replaced with &quot;other&quot;.</span>
+<span class="sd">          generic_method_attribute_filter: Once provided, this will be called with a generic</span>
+<span class="sd">        method type to decide whether to record the method name or to replace it with</span>
+<span class="sd">        &quot;other&quot;. Note that pre-registered methods will always be recorded no matter what</span>
+<span class="sd">        this function returns.</span>
+<span class="sd">        Return True means the original method name will be used, False means method name will</span>
+<span class="sd">        be replaced with &quot;other&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plugin_options</span> <span class="o">=</span> <span class="n">plugin_options</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meter_provider</span> <span class="o">=</span> <span class="n">meter_provider</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_attribute_filter</span> <span class="o">=</span> <span class="n">target_attribute_filter</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">_target</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generic_method_attribute_filter</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">generic_method_attribute_filter</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">_target</span><span class="p">:</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plugins</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_open_telemetry_observability</span><span class="o">.</span><span class="n">_OpenTelemetryPlugin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="OpenTelemetryPlugin.register_global">
+<a class="viewcode-back" href="../../grpc_observability.html#grpc_observability.OpenTelemetryPlugin.register_global">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_global</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Registers a global plugin that acts on all channels and servers running on the process.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: If a global plugin was already registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_open_telemetry_observability</span><span class="o">.</span><span class="n">start_open_telemetry_observability</span><span class="p">(</span>
+            <span class="n">plugins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_plugins</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OpenTelemetryPlugin.deregister_global">
+<a class="viewcode-back" href="../../grpc_observability.html#grpc_observability.OpenTelemetryPlugin.deregister_global">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deregister_global</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        De-register the global plugin that acts on all channels and servers running on the process.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: If no global plugin was registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_open_telemetry_observability</span><span class="o">.</span><span class="n">end_open_telemetry_observability</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_open_telemetry_observability</span><span class="o">.</span><span class="n">start_open_telemetry_observability</span><span class="p">(</span>
+            <span class="n">plugins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_plugins</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_open_telemetry_observability</span><span class="o">.</span><span class="n">end_open_telemetry_observability</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_enabled_optional_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OptionalLabelType</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, The gRPC Authors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
