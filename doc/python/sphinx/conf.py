@@ -16,17 +16,20 @@
 
 import os
 import sys
+
+# Add all packages to sys.path
 PYTHON_FOLDER = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..',
                              '..', '..', 'src', 'python')
-sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio'))
-sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_admin'))
-sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_channelz'))
-sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_csds'))
-sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_health_checking'))
-sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_observability'))
-sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_reflection'))
-sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_status'))
-sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_testing'))
+ALL_PACKAGES = [
+    'grpcio', 'grpcio_admin', 'grpcio_channelz', 'grpcio_csds',
+    'grpcio_health_checking', 'grpcio_observability',
+    'grpcio_reflection', 'grpcio_status', 'grpcio_testing'
+]
+for pkg in ALL_PACKAGES:
+    # Use .append() instead of insert(0) to let Sphinx find the compiled
+    # Cython extensions from site-packages correctly
+    sys.path.append(os.path.join(PYTHON_FOLDER, pkg))
+
 
 # -- Project information -----------------------------------------------------
 
