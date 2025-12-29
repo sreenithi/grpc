@@ -18,15 +18,15 @@ import os
 import sys
 PYTHON_FOLDER = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..',
                              '..', '..', 'src', 'python')
-sys.path.insert(0, os.path.join(PYTHON_FOLDER, 'grpcio'))
-sys.path.insert(0, os.path.join(PYTHON_FOLDER, 'grpcio_admin'))
-sys.path.insert(0, os.path.join(PYTHON_FOLDER, 'grpcio_channelz'))
-sys.path.insert(0, os.path.join(PYTHON_FOLDER, 'grpcio_csds'))
-sys.path.insert(0, os.path.join(PYTHON_FOLDER, 'grpcio_health_checking'))
-sys.path.insert(0, os.path.join(PYTHON_FOLDER, 'grpcio_observability'))
-sys.path.insert(0, os.path.join(PYTHON_FOLDER, 'grpcio_reflection'))
-sys.path.insert(0, os.path.join(PYTHON_FOLDER, 'grpcio_status'))
-sys.path.insert(0, os.path.join(PYTHON_FOLDER, 'grpcio_testing'))
+sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio'))
+sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_admin'))
+sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_channelz'))
+sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_csds'))
+sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_health_checking'))
+sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_observability'))
+sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_reflection'))
+sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_status'))
+sys.path.append(os.path.join(PYTHON_FOLDER, 'grpcio_testing'))
 
 # -- Project information -----------------------------------------------------
 
@@ -74,8 +74,8 @@ autodoc_default_options = {
 # autodoc_mock_imports = ["envoy"]
 autodoc_mock_imports = [
     "envoy",
-    "grpc._cython",
-    "grpc_observability._cyobservability",
+    # "grpc._cython",
+    # "grpc_observability._cyobservability",
 ]
 
 
@@ -89,6 +89,7 @@ html_theme_options = {
     "navbar_center": [],
     "header_links_before_dropdown": 15,
     "secondary_sidebar_items": ["page-toc", "edit-this-page"],
+    "show_nav_level": 3,
 }
 
 html_theme_options["analytics"] = {
