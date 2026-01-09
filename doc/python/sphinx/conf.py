@@ -74,13 +74,7 @@ autodoc_default_options = {
     'members': None,
 }
 
-# autodoc_mock_imports = ["envoy"]
-autodoc_mock_imports = [
-    "envoy",
-    # "grpc._cython",
-    # "grpc_observability._cyobservability",
-]
-
+autodoc_mock_imports = ["envoy"]
 
 autodoc_typehints = 'description'
 
@@ -92,7 +86,7 @@ html_theme_options = {
     "navbar_center": [],
     "header_links_before_dropdown": 15,
     "secondary_sidebar_items": ["page-toc", "edit-this-page"],
-    "show_nav_level": 3,
+    "show_toc_level": 2,
 }
 
 html_theme_options["analytics"] = {
