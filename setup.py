@@ -502,6 +502,7 @@ if "linux" in sys.platform or "darwin" in sys.platform:
 
 DEFINE_MACROS += (("Py_LIMITED_API", "0x030A0000"),)
 
+
 def cython_extensions_and_necessity():
     cython_module_files = [
         os.path.join(PYTHON_STEM, name.replace(".", "/") + ".pyx")
