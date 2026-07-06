@@ -892,8 +892,8 @@ absl::Status Http2ServerTransport::PrepareControlFrames() {
     EnforceLatestIncomingSettings();
     settings_->MaybeGetSettingsAndSettingsAckFrames(flow_control_,
                                                     frame_sender);
-    // MaybeSpawnDelayedPing(ping_manager_->MaybeGetSerializedPingFrames(
-    //     frame_sender, NextAllowedPingInterval()));
+    MaybeSpawnDelayedPing(ping_manager_->MaybeGetSerializedPingFrames(
+        frame_sender, NextAllowedPingInterval()));
     MaybeGetWindowUpdateFrames(frame_sender);
     security_frame_handler_->MaybeAppendSecurityFrame(frame_sender);
   }
@@ -928,7 +928,7 @@ void Http2ServerTransport::NotifyFramesWriteDone() {
   // All notifications are expected to be synchronous.
   GRPC_HTTP2_SERVER_DLOG << "Http2ServerTransport::NotifyFramesWriteDone";
   read_context_.ResumeReadLoopIfPaused();
-  // MaybeSpawnPingTimeout(ping_manager_->NotifyPingSent());
+  MaybeSpawnPingTimeout(ping_manager_->NotifyPingSent());
   goaway_manager_.NotifyGoawaySent();
   MaybeSpawnWaitForSettingsTimeout();
 }
@@ -1566,27 +1566,27 @@ absl::Status Http2ServerTransport::UpdateAllStreamsWritability() {
 //////////////////////////////////////////////////////////////////////////////
 // Ping Keepalive and Goaway
 
-// void Http2ServerTransport::MaybeSpawnPingTimeout(
-//     std::optional<uint64_t> opaque_data) {
-//   if (opaque_data.has_value()) {
-//     SpawnGuardedTransportParty(
-//         "PingTimeout", [self = RefAsSubclass<Http2ServerTransport>(),
-//                         opaque_data = *opaque_data]() {
-//           return self->ping_manager_->TimeoutPromise(opaque_data);
-//         });
-//   }
-// }
-// void Http2ServerTransport::MaybeSpawnDelayedPing(
-//     std::optional<Duration> delayed_ping_wait) {
-//   if (delayed_ping_wait.has_value()) {
-//     SpawnGuardedTransportParty(
-//         "DelayedPing", [self = RefAsSubclass<Http2ServerTransport>(),
-//                         wait = *delayed_ping_wait]() {
-//           GRPC_HTTP2_PING_LOG << "Scheduling delayed ping after wait=" <<
-//           wait; return self->ping_manager_->DelayedPingPromise(wait);
-//         });
-//   }
-// }
+void Http2ServerTransport::MaybeSpawnPingTimeout(
+    std::optional<uint64_t> opaque_data) {
+  if (opaque_data.has_value()) {
+    SpawnGuardedTransportParty(
+        "PingTimeout", [self = RefAsSubclass<Http2ServerTransport>(),
+                        opaque_data = *opaque_data]() {
+          return self->ping_manager_->TimeoutPromise(opaque_data);
+        });
+  }
+}
+void Http2ServerTransport::MaybeSpawnDelayedPing(
+    std::optional<Duration> delayed_ping_wait) {
+  if (delayed_ping_wait.has_value()) {
+    SpawnGuardedTransportParty(
+        "DelayedPing", [self = RefAsSubclass<Http2ServerTransport>(),
+                        wait = *delayed_ping_wait]() {
+          GRPC_HTTP2_PING_LOG << "Scheduling delayed ping after wait=" << wait;
+          return self->ping_manager_->DelayedPingPromise(wait);
+        });
+  }
+}
 
 absl::Status Http2ServerTransport::AckPing(uint64_t opaque_data) {
   // It is possible that the PingRatePolicy may decide to not send a ping
@@ -1607,14 +1607,14 @@ absl::Status Http2ServerTransport::AckPing(uint64_t opaque_data) {
   return absl::OkStatus();
 }
 
-// void Http2ServerTransport::MaybeSpawnKeepaliveLoop() {
-//   if (keepalive_manager_->IsKeepAliveLoopNeeded()) {
-//     SpawnGuardedTransportParty(
-//         "KeepaliveLoop", [self = RefAsSubclass<Http2ServerTransport>()]() {
-//           return self->keepalive_manager_->KeepaliveLoop();
-//         });
-//   }
-// }
+void Http2ServerTransport::MaybeSpawnKeepaliveLoop() {
+  if (keepalive_manager_->IsKeepAliveLoopNeeded()) {
+    SpawnGuardedTransportParty(
+        "KeepaliveLoop", [self = RefAsSubclass<Http2ServerTransport>()]() {
+          return self->keepalive_manager_->KeepaliveLoop();
+        });
+  }
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // Error Path and Close Path
@@ -2028,7 +2028,7 @@ void Http2ServerTransport::Orphan() {
 
 void Http2ServerTransport::SpawnTransportLoops() {
   GRPC_HTTP2_SERVER_DLOG << "Http2ServerTransport::SpawnTransportLoops Begin";
-  // MaybeSpawnKeepaliveLoop();
+  MaybeSpawnKeepaliveLoop();
 
   // SpawnGuardedTransportParty(
   //     "FlowControlPeriodicUpdateLoop",
