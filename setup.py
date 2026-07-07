@@ -507,6 +507,7 @@ else:
     DEFINE_MACROS += (("Py_LIMITED_API", "0x030A00F0"),)
     API_TAG = "cp310"
 
+
 def cython_extensions_and_necessity():
     cython_module_files = [
         os.path.join(PYTHON_STEM, name.replace(".", "/") + ".pyx")
