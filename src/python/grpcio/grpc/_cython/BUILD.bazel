@@ -33,7 +33,6 @@ pyx_library(
     ],
     data = [":copy_roots_pem"],
     defines = [
-        "GRPC_PYTHON_BUILD=1",
         "Py_LIMITED_API=0x030B00F0",
     ],
     deps = [
