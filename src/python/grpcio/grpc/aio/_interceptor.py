@@ -86,7 +86,8 @@ class ServerInterceptor(metaclass=ABCMeta):
     async def intercept_service(
         self,
         continuation: Callable[
-            [grpc.HandlerCallDetails], Awaitable[grpc.RpcMethodHandler[Any, Any]]
+            [grpc.HandlerCallDetails],
+            Awaitable[grpc.RpcMethodHandler[Any, Any]],
         ],
         handler_call_details: grpc.HandlerCallDetails,
     ) -> grpc.RpcMethodHandler[Any, Any]:
