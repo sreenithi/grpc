@@ -3560,7 +3560,10 @@ def delete_instance_groups(gcp):
                     timeout_sec=_WAIT_FOR_BACKEND_SEC,
                 )
             except KeyError as key_error:
-                logger.info("Caught KeyError while deleting instance group: %s", key_error)
+                logger.info(
+                    "Caught KeyError while deleting instance group: %s",
+                    key_error,
+                )
             except googleapiclient.errors.HttpError as http_error:
                 logger.info("Delete failed: %s", http_error)
 
