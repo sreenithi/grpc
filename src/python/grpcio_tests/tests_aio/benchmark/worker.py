@@ -16,6 +16,7 @@ import argparse
 import asyncio
 import logging
 import sys
+
 print("****Python version:", sys.version_info)
 
 from grpc.experimental import aio
