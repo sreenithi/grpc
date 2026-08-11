@@ -61,7 +61,7 @@ pyx_library(
         "_cyobservability.pyx",
     ],
     defines = [
-        "Py_LIMITED_API=0x030B00F0",
+        "Py_LIMITED_API=0x030C00F0",
     ],
     deps = [
         ":observability",
