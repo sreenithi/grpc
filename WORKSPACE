@@ -45,15 +45,15 @@ local_repository(
 load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 
 python_register_toolchains(
-    name = "python_3_11",
-    python_version = "3.11",
+    name = "python_3_12",
+    python_version = "3.12",
 )
 
 load("@rules_python//python:pip.bzl", "pip_parse")
 
 pip_parse(
     name = "grpc_python_dependencies",
-    python_interpreter_target = "@python_3_11_host//:python",
+    python_interpreter_target = "@python_3_12_host//:python",
     requirements_lock = "@com_github_grpc_grpc//:requirements.bazel.lock",
 )
 

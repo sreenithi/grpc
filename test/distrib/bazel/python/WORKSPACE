@@ -45,6 +45,6 @@ pip_parse(
 load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 
 python_register_toolchains(
-    name = "python_3_11",
-    python_version = "3.11",
+    name = "python_3_12",
+    python_version = "3.12",
 )
