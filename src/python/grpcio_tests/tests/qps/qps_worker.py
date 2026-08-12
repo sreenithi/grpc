@@ -15,10 +15,11 @@
 
 import argparse
 import logging
+import sys
 import time
 
 import grpc
-import sys
+
 print("****Python version:", sys.version_info)
 
 from src.proto.grpc.testing import worker_service_pb2_grpc
